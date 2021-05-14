@@ -53,6 +53,7 @@ class GildedRose {
 						}
 					}
 				}
+
 			}
 
 			// Everything except for Sulfuras the sellIn Decreases
