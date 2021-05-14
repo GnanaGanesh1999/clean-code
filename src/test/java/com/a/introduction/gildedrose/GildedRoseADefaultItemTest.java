@@ -59,13 +59,12 @@ public class GildedRoseADefaultItemTest {
 
     @Test
     public void testUpdateQualityAgedBrie2() {
-        Item item = new Item("Aged Brie", -1, 3);
-        Item[] items = new Item[]{item};
-        GildedRose app = new GildedRose(items);
+        final GildedRose app = getGildedRoseWithOneItem(AGED_BRIE, EXPIRING_SELL_IN, DEFAULT_QUALITY);
+        Item expected = new Item(AGED_BRIE, EXPIRING_SELL_IN - 1, DEFAULT_QUALITY + 2);
+
         app.updateQuality();
-        assertEquals("Aged Brie", app.items[0].name);
-        assertEquals(-2, app.items[0].sellIn);
-        assertEquals(5, app.items[0].quality);
+
+        assertItem(expected, app.items[0]);
     }
 
     @Test
