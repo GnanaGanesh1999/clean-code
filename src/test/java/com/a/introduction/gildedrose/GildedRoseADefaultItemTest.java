@@ -11,6 +11,7 @@ public class GildedRoseADefaultItemTest {
     public static final String DEFAULT_ITEM = "DEFAULT_ITEM";
     public static final int EXPIRING_SELL_IN = -1;
     public static final String AGED_BRIE = "Aged Brie";
+    public static final int QUALITY_WITH_VALUE_FIFTY = 50;
 
     private void assertItem(Item expected, Item actual) {
         assertEquals(expected.name, actual.name);
@@ -58,7 +59,7 @@ public class GildedRoseADefaultItemTest {
     }
 
     @Test
-    public void testUpdateQualityAgedBrie2() {
+    public void shouldIncreaseQualityBy2ForNonExpiredAgedBrie() {
         final GildedRose app = getGildedRoseWithOneItem(AGED_BRIE, EXPIRING_SELL_IN, DEFAULT_QUALITY);
         Item expected = new Item(AGED_BRIE, EXPIRING_SELL_IN - 1, DEFAULT_QUALITY + 2);
 
@@ -68,13 +69,12 @@ public class GildedRoseADefaultItemTest {
     }
 
     @Test
-    public void testUpdateQualityAgedBrie3() {
-        Item item = new Item("Aged Brie", 4, 50);
-        Item[] items = new Item[]{item};
-        GildedRose app = new GildedRose(items);
+    public void shouldNotChangeQualityForNonExpiredAgedBrieWithQualityOverFifty() {
+        final GildedRose app = getGildedRoseWithOneItem("Aged Brie", NON_EXPIRING_SELL_IN, QUALITY_WITH_VALUE_FIFTY);
+        Item expected = new Item(AGED_BRIE, NON_EXPIRING_SELL_IN - 1, QUALITY_WITH_VALUE_FIFTY);
+
         app.updateQuality();
-        assertEquals("Aged Brie", app.items[0].name);
-        assertEquals(3, app.items[0].sellIn);
-        assertEquals(50, app.items[0].quality);
+
+        assertItem(expected, app.items[0]);
     }
 }
