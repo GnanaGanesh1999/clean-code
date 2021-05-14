@@ -14,6 +14,8 @@ public class GildedRoseADefaultItemTest {
     public static final int QUALITY_WITH_VALUE_FIFTY = 50;
     public static final String BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT = "Backstage passes to a TAFKAL80ETC concert";
     public static final int SELL_IN_OVER_10_DAYS = 15;
+    public static final int SELL_IN_WITHIN_10_DAYS = 7;
+    public static final int SELL_IN_WITHIN_5_DAYS = 4;
 
     private void assertItem(Item expected, Item actual) {
         assertEquals(expected.name, actual.name);
@@ -92,27 +94,22 @@ public class GildedRoseADefaultItemTest {
     }
 
     @Test
-    public void testUpdateQualityBackstagePasses2() {
-        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 7, 3);
-        Item[] items = new Item[] { item };
-        GildedRose app = new GildedRose(items);
+    public void shouldIncreaseQualityBy2ForBackstagePassesWithIn10Days() {
+        final GildedRose app = getGildedRoseWithOneItem(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT, SELL_IN_WITHIN_10_DAYS, DEFAULT_QUALITY);
+        Item expected = new Item(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT, SELL_IN_WITHIN_10_DAYS - 1, DEFAULT_QUALITY + 2);
+
         app.updateQuality();
-        assertEquals("Backstage passes to a TAFKAL80ETC concert",
-                app.items[0].name);
-        assertEquals(6, app.items[0].sellIn);
-        assertEquals(5, app.items[0].quality);
+
+        assertItem(expected, app.items[0]);
     }
 
     @Test
-    public void testUpdateQualityBackstagePasses3() {
-        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 4, 3);
-        Item[] items = new Item[] { item };
-        GildedRose app = new GildedRose(items);
-        app.updateQuality();
-        assertEquals("Backstage passes to a TAFKAL80ETC concert",
-                app.items[0].name);
-        assertEquals(3, app.items[0].sellIn);
-        assertEquals(6, app.items[0].quality);
-    }
+    public void shouldIncreaseQualityBy3ForBackstagePassesWithIn5Days() {
+        final GildedRose app = getGildedRoseWithOneItem(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT, SELL_IN_WITHIN_5_DAYS, DEFAULT_QUALITY);
 
+        app.updateQuality();
+
+        Item expected  = new Item(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT, SELL_IN_WITHIN_5_DAYS - 1, DEFAULT_QUALITY + 3 );
+        assertItem(expected, app.items[0]);
+    }
 }
