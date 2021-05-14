@@ -9,7 +9,7 @@ public class GildedRoseADefaultItemTest {
 	public static final int NON_EXPIRING_SELL_IN = 14;
 	public static final int DEFAULT_QUALITY = 3;
 	public static final String DEFAULT_ITEM = "DEFAULT_ITEM";
-	public static final int EXPIRING_SELL_IN = -1;
+
 
 	private void assertItem(Item expected, Item actual) {
 		assertEquals(expected.name, actual.name);
@@ -17,8 +17,8 @@ public class GildedRoseADefaultItemTest {
 		assertEquals(expected.quality, actual.quality);
 	}
 
-	private GildedRose getGildedRoseWithOneItem(int sellInBeforeVariation) {
-		Item item = new Item(GildedRoseADefaultItemTest.DEFAULT_ITEM, sellInBeforeVariation, GildedRoseADefaultItemTest.DEFAULT_QUALITY);
+	private GildedRose getGildedRoseWithOneItem(String itemName, int sellInBeforeVariation, int qualityBeforeVariation) {
+		Item item = new Item(itemName, sellInBeforeVariation, qualityBeforeVariation);
 		Item[] items = new Item[]{item};
 		return new GildedRose(items);
 	}
@@ -26,7 +26,7 @@ public class GildedRoseADefaultItemTest {
 	@Test
 	public void shouldDecreaseQualityBy1ForNonExpiredItem() {
 
-		GildedRose app = getGildedRoseWithOneItem(NON_EXPIRING_SELL_IN);
+		GildedRose app = getGildedRoseWithOneItem(DEFAULT_ITEM, NON_EXPIRING_SELL_IN, DEFAULT_QUALITY);
 		final Item expected = new Item(DEFAULT_ITEM, NON_EXPIRING_SELL_IN - 1, DEFAULT_QUALITY - 1);
 
 		app.updateQuality();
@@ -35,13 +35,22 @@ public class GildedRoseADefaultItemTest {
 	}
 
 	@Test
-	public void shouldDecreaseQualityBy2ForExpiredItem() {
+	public void testUpdateQualityForExpiredItem() {
 
-		GildedRose app = getGildedRoseWithOneItem(EXPIRING_SELL_IN);
-		final Item expected = new Item(DEFAULT_ITEM, EXPIRING_SELL_IN - 1, DEFAULT_QUALITY - 2);
+		final int sellInBeforeVariation = -1;
+		final int qualityBeforeVariation = 3;
+		final String expectedItemName = "DEFAULT_ITEM";
+		final int expectedSellIn = -2;
+		final int expectedQuality = 1;
 
+		GildedRose app = getGildedRoseWithOneItem(DEFAULT_ITEM, sellInBeforeVariation, qualityBeforeVariation);
 		app.updateQuality();
 
-		assertItem(expected, app.items[0]);
+		final String actualItemName = app.items[0].name;
+		final int actualSellIn = app.items[0].sellIn;
+		final int actualQuality = app.items[0].quality;
+		assertEquals(expectedItemName, actualItemName);
+		assertEquals(expectedSellIn, actualSellIn);
+		assertEquals(expectedQuality, actualQuality);
 	}
 }
